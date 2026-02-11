@@ -1,14 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EyeIcon, KeyIcon, CheckIcon, CopyIcon } from "./icons";
+import { GetSecretResponse } from "@ncostamagna/passit-proto";
 
 export function SecretViewer({
   id,
   token,
+  onReveal,
 }: {
   id: string;
   token: string | null;
+  onReveal: (id: string, token: string | null) => Promise<{message: string | null; error: boolean}>;
 }) {
   const [decryptionKey, setDecryptionKey] = useState("");
   const [decrypted, setDecrypted] = useState(!!token);
@@ -17,7 +20,16 @@ export function SecretViewer({
   // Mock decrypted secret — replace with real API call
   const secret = "asdasdasd";
 
-  const handleDecrypt = () => {
+  useEffect(() => {
+    if (!decrypted) return;
+
+    console.log("entraaaa")
+    onReveal(id, token).then((data) => {
+      console.log(data)
+    })
+  }, [decrypted]);
+
+  const handleDecrypt = async () => {
     // TODO: use decryptionKey + id to fetch and decrypt the secret
     setDecrypted(true);
   };
