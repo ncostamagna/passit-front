@@ -6,8 +6,11 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 # Dependencies
 FROM base AS deps
 WORKDIR /app
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+COPY package.json pnpm-lock.yaml .npmrc ./
+ARG NPM_TOKEN
+RUN echo "//npm.pkg.github.com/:_authToken=${NPM_TOKEN}" >> .npmrc && \
+    pnpm install --frozen-lockfile && \
+    rm -f .npmrc
 
 # Build
 FROM base AS builder
