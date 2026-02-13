@@ -6,15 +6,16 @@ import { ServiceError } from "@grpc/grpc-js";
 
 export default function Home() {
 
-  async function createSecret(encryptedText: string) : Promise<{error: boolean, data: string}> {
-    // TODO: send encrypted text to backend and recive id
+  async function createSecret(encryptedText: string, oneTime: boolean) : Promise<{error: boolean, data: string}> {
     "use server";
 
     const request = new CreateSecretRequest();
     request.setMessage(encryptedText);
     request.setExpiration(3600);
+    request.setOneTime(oneTime);
 
     const response = await new Promise<{error: boolean, data: string}>((resolve, reject) => grpcClient.createSecret(request, (err : ServiceError, response: CreateSecretResponse) => {
+      // TODO: solve in 1 line
       if (err) {
         resolve({
           error: true,

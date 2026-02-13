@@ -1,5 +1,5 @@
 import { useState } from "react";
-export function EncryptForm({handleEncrypt}: { handleEncrypt: (message: string) => void }) {
+export function EncryptForm({handleEncrypt}: { handleEncrypt: (message: string, oneTime: boolean) => void }) {
 
   const [message, setMessage] = useState("");
   const [expiration, setExpiration] = useState("3600");
@@ -81,7 +81,7 @@ export function EncryptForm({handleEncrypt}: { handleEncrypt: (message: string) 
       </div>
 
       <button
-        onClick={() => handleEncrypt(message)}
+        onClick={() => handleEncrypt(message, oneTime)}
         disabled={!message.trim()}
         className="btn-gradient mt-8 w-full text-white py-3.5 px-6 rounded-xl font-semibold cursor-pointer"
       >

@@ -5,7 +5,7 @@ import { EncryptForm } from "./encrypt-form";
 import { UrlEncryptedPassword } from "./url-encrypted-password";
 import { encrypt } from "@/lib/crypt";
 
-export function Home({createSecret}: {createSecret: (encryptedText: string) => Promise<{error: boolean, data: string}>}) {
+export function Home({createSecret}: {createSecret: (encryptedText: string, oneTime: boolean) => Promise<{error: boolean, data: string}>}) {
 
   const [result, setResult] = useState<{
     id: string;
@@ -13,11 +13,11 @@ export function Home({createSecret}: {createSecret: (encryptedText: string) => P
     cryptoKey: string;
   } | null>(null);
 
-  const handleEncrypt = async (message: string) => {
+  const handleEncrypt = async (message: string, oneTime: boolean) => {
     console.log(message);
     const {ciphertext, iv, key} = await encrypt(message);
     // TODO: send ciphertext to backend and recive id
-    const { error, data } = await createSecret(ciphertext);
+    const { error, data } = await createSecret(ciphertext, oneTime);
     console.log(ciphertext, iv, key);
     setResult({ id: data, iv, cryptoKey: key });
   };
