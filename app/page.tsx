@@ -1,11 +1,41 @@
 import { Navbar } from "@/components/navbar";
-import { EncryptForm } from "@/components/encrypt-form";
+import { Home as HomeContent } from "@/components/Home/home";
+import grpcClient from "@/lib/grpc-client";
+import { CreateSecretRequest, CreateSecretResponse } from "@ncostamagna/passit-proto";
+import { ServiceError } from "@grpc/grpc-js";
 
 export default function Home() {
+
+  async function createSecret(encryptedText: string) : Promise<{error: boolean, data: string}> {
+    // TODO: send encrypted text to backend and recive id
+    "use server";
+
+    const request = new CreateSecretRequest();
+    request.setMessage(encryptedText);
+    request.setExpiration(3600);
+
+    const response = await new Promise<{error: boolean, data: string}>((resolve, reject) => grpcClient.createSecret(request, (err : ServiceError, response: CreateSecretResponse) => {
+      if (err) {
+        resolve({
+          error: true,
+          data: 'Error creating secret',
+        });
+        return;
+      } 
+
+      resolve({
+        error: false,
+        data: response.getKey(),
+      });
+    }));
+
+    return response;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-animated">
       <Navbar />
-      <EncryptForm />
+      <HomeContent createSecret={createSecret} />
     </div>
   );
 }
