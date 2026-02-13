@@ -3,6 +3,7 @@ import { Home as HomeContent } from "@/components/Home/home";
 import grpcClient from "@/lib/grpc-client";
 import { CreateSecretRequest, CreateSecretResponse } from "@ncostamagna/passit-proto";
 import { ServiceError } from "@grpc/grpc-js";
+import { BASE_URL } from "@/config/config";
 
 export default function Home() {
 
@@ -36,7 +37,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-animated">
       <Navbar />
-      <HomeContent createSecret={createSecret} />
+      <HomeContent createSecret={createSecret} baseUrl={BASE_URL} />
     </div>
   );
 }

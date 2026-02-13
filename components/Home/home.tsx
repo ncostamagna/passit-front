@@ -5,21 +5,20 @@ import { EncryptForm } from "./encrypt-form";
 import { UrlEncryptedPassword } from "./url-encrypted-password";
 import { encrypt } from "@/lib/crypt";
 
-export function Home({createSecret}: {createSecret: (encryptedText: string, oneTime: boolean) => Promise<{error: boolean, data: string}>}) {
+export function Home({createSecret, baseUrl}: {createSecret: (encryptedText: string, oneTime: boolean) => Promise<{error: boolean, data: string}>, baseUrl: string}) {
 
   const [result, setResult] = useState<{
-    id: string;
-    iv: string;
+    url: string;
     cryptoKey: string;
   } | null>(null);
 
   const handleEncrypt = async (message: string, oneTime: boolean) => {
     console.log(message);
     const {ciphertext, iv, key} = await encrypt(message);
-    // TODO: send ciphertext to backend and recive id
+    // TODO: check error
     const { error, data } = await createSecret(ciphertext, oneTime);
     console.log(ciphertext, iv, key);
-    setResult({ id: data, iv, cryptoKey: key });
+    setResult({ url: `${baseUrl}/s/${data}/${iv}`, cryptoKey: key });
   };
 
   const handleBack = () => {
@@ -28,7 +27,7 @@ export function Home({createSecret}: {createSecret: (encryptedText: string, oneT
 
   return (
     <main className="max-w-2xl mx-auto mt-12 px-4 pb-16">
-      {result ? <UrlEncryptedPassword id={result.id} iv={result.iv} cryptoKey={result.cryptoKey} handleBack={handleBack} /> : <EncryptForm handleEncrypt={handleEncrypt}/>}
+      {result ? <UrlEncryptedPassword url={result.url} cryptoKey={result.cryptoKey} handleBack={handleBack} /> : <EncryptForm handleEncrypt={handleEncrypt}/>}
     </main>
   );
 }

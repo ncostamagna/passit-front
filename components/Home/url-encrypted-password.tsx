@@ -1,12 +1,10 @@
 import { ShieldCheckIcon } from "../icons";
 import { CopyButton } from "../copy-button";
 
-const BASE_URL = "http://localhost:3000";
+export function UrlEncryptedPassword({ url, cryptoKey, handleBack}: { url: string, cryptoKey: string, handleBack: () => void }) {
 
-export function UrlEncryptedPassword({ id, iv, cryptoKey, handleBack}: { id: string, iv: string, cryptoKey: string, handleBack: () => void }) {
-
-    const oneClickLink = `${BASE_URL}/s/${id}/${iv}/${cryptoKey}`;
-    const shortLink = `${BASE_URL}/s/${id}/${iv}`;
+    const oneClickLink = `${url}/${cryptoKey}`;
+    const shortLink = url;
 
     return (
         <div className="animate-fade-in">

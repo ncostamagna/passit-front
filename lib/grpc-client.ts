@@ -1,7 +1,6 @@
 import grpc from "@grpc/grpc-js";                  
+import { GRPC_HOST } from "@/config/config";
 const proto = require("@ncostamagna/passit-proto");
-
-const GRPC_HOST = process.env.GRPC_HOST || "localhost:8050";
 
 const client = new proto.PassitClient(
   GRPC_HOST,
