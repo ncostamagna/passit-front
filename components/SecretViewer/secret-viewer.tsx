@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { Decrypted } from "./decrypted";
 import { DecryptionKey } from "./decryption-key";
+import { SecretError } from "./error";
 import { decrypt } from "@/lib/crypt";
 export function SecretViewer({
   id,
@@ -20,6 +21,7 @@ export function SecretViewer({
   console.log(cryptoKey);
   const [decrypted, setDecrypted] = useState(!!cryptoKey);
   const [secret, setSecret] = useState<string>("");
+  const [error, setError] = useState(false);
   console.log(decrypted);
 
   // Mock decrypted secret — replace with real API call
@@ -28,6 +30,11 @@ export function SecretViewer({
     if (!decrypted) return;
     onReveal(id).then(({message, error}) => {
       console.log(message, error)
+
+      if (error) {
+        setError(true);
+        return;
+      }
 
       if (message && cryptoKey) {
         decrypt(message, iv, cryptoKey).then((decrypted) => {
@@ -46,9 +53,11 @@ export function SecretViewer({
 
   return (
     <main className="max-w-2xl mx-auto mt-12 px-4 pb-16">
-      {decrypted
-        ? (secret ? <Decrypted secret={secret} /> : <p className="text-white">Decrypting...</p>)
-        : <DecryptionKey handleDecrypt={handleDecrypt} />
+      {error
+        ? <SecretError />
+        : decrypted
+          ? (secret ? <Decrypted secret={secret} /> : <p className="text-white">Decrypting...</p>)
+          : <DecryptionKey handleDecrypt={handleDecrypt} />
       }
     </main>
   );

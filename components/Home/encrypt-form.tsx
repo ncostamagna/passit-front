@@ -4,7 +4,7 @@ export function EncryptForm({handleEncrypt}: { handleEncrypt: (message: string, 
   const [message, setMessage] = useState("");
   const [expiration, setExpiration] = useState("3600");
   const [generateDecryptionKey, setGenerateDecryptionKey] = useState(true);
-  const [oneTime, setOneTime] = useState(false);
+  const [oneTime, setOneTime] = useState(true);
 
   return (
     <div className="animate-fade-in">
