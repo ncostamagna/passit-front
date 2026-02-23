@@ -3,7 +3,7 @@ export function EncryptForm({handleEncrypt}: { handleEncrypt: (message: string, 
 
   const [message, setMessage] = useState("");
   const [expiration, setExpiration] = useState("3600");
-  const [generateDecryptionKey, setGenerateDecryptionKey] = useState(true);
+  //const [generateDecryptionKey, setGenerateDecryptionKey] = useState(true);
   const [oneTime, setOneTime] = useState(true);
 
   return (
@@ -69,7 +69,7 @@ export function EncryptForm({handleEncrypt}: { handleEncrypt: (message: string, 
           />
           One-time download
         </label>
-        <label className="flex items-center gap-3 cursor-pointer text-sm text-slate-300 hover:text-slate-200 transition-colors">
+        {/*<label className="flex items-center gap-3 cursor-pointer text-sm text-slate-300 hover:text-slate-200 transition-colors">
           <input
             type="checkbox"
             checked={generateDecryptionKey}
@@ -77,7 +77,7 @@ export function EncryptForm({handleEncrypt}: { handleEncrypt: (message: string, 
             className="checkbox-custom"
           />
           Generate decryption key
-        </label>
+        </label>*/}
       </div>
 
       <button

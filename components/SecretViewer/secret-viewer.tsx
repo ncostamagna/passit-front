@@ -6,6 +6,7 @@ import { Decrypted } from "./decrypted";
 import { DecryptionKey } from "./decryption-key";
 import { SecretError } from "./error";
 import { decrypt } from "@/lib/crypt";
+
 export function SecretViewer({
   id,
   iv,
@@ -17,45 +18,39 @@ export function SecretViewer({
   cryptoKey: string | null;
   onReveal: (id: string) => Promise<{message: string | null; error: boolean}>;
 }) {
-
-  console.log(cryptoKey);
-  const [decrypted, setDecrypted] = useState(!!cryptoKey);
   const [secret, setSecret] = useState<string>("");
   const [error, setError] = useState(false);
-  console.log(decrypted);
+  const [loading, setLoading] = useState(!!cryptoKey);
 
-  // Mock decrypted secret — replace with real API call
+  const revealSecret = (key: string) => {
+    setLoading(true);
+    onReveal(id)
+      .then(({ message, error }) => {
+        if (error || !message) {
+          setError(true);
+          return;
+        }
+        return decrypt(message, iv, key);
+      })
+      .then((result) => {
+        if (result) setSecret(result);
+      })
+      .catch(() => setError(true));
+  };
 
   useEffect(() => {
-    if (!decrypted) return;
-    onReveal(id).then(({message, error}) => {
-      console.log(message, error)
-
-      if (error) {
-        setError(true);
-        return;
-      }
-
-      if (message && cryptoKey) {
-        decrypt(message, iv, cryptoKey).then((decrypted) => {
-          console.log(decrypted);
-          setSecret(decrypted);
-        });
-      }
-    })
-  }, [decrypted]);
+    if (cryptoKey) revealSecret(cryptoKey);
+  }, []);
 
   const handleDecrypt = (key: string) => {
-    setDecrypted(true);
-  }
-
-  
+    revealSecret(key);
+  };
 
   return (
     <main className="max-w-2xl mx-auto mt-12 px-4 pb-16">
       {error
         ? <SecretError />
-        : decrypted
+        : loading
           ? (secret ? <Decrypted secret={secret} /> : <p className="text-white">Decrypting...</p>)
           : <DecryptionKey handleDecrypt={handleDecrypt} />
       }
