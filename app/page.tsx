@@ -27,7 +27,7 @@ export default function Home() {
 
       resolve({
         error: false,
-        data: response.getKey(),
+        data: `${BASE_URL}/s/${response.getKey()}`,
       });
     }));
 
@@ -37,7 +37,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-animated">
       <Navbar />
-      <HomeContent createSecret={createSecret} baseUrl={BASE_URL} />
+      <HomeContent createSecret={createSecret} />
     </div>
   );
 }
