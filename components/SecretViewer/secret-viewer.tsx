@@ -22,10 +22,14 @@ export function SecretViewer({
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(!!cryptoKey);
 
+  console.log("[SecretViewer] mount - id:", id, "iv:", iv, "cryptoKey:", cryptoKey, "loading:", !!cryptoKey);
+
   const revealSecret = (key: string) => {
+    console.log("[SecretViewer] revealSecret called, key length:", key.length);
     setLoading(true);
     onReveal(id)
       .then(({ message, error }) => {
+        console.log("[SecretViewer] onReveal response - error:", error, "hasMessage:", !!message);
         if (error || !message) {
           setError(true);
           return;
@@ -33,12 +37,17 @@ export function SecretViewer({
         return decrypt(message, iv, key);
       })
       .then((result) => {
+        console.log("[SecretViewer] decrypt result:", !!result);
         if (result) setSecret(result);
       })
-      .catch(() => setError(true));
+      .catch((e) => {
+        console.error("[SecretViewer] error:", e);
+        setError(true);
+      });
   };
 
   useEffect(() => {
+    console.log("[SecretViewer] useEffect - cryptoKey:", cryptoKey);
     if (cryptoKey) revealSecret(cryptoKey);
   }, []);
 

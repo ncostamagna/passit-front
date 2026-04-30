@@ -13,11 +13,9 @@ export function Home({createSecret}: {createSecret: (encryptedText: string, oneT
   } | null>(null);
 
   const handleEncrypt = async (message: string, oneTime: boolean) => {
-    console.log(message);
     const {ciphertext, iv, key} = await encrypt(message);
-    // TODO: check error
     const { error, data } = await createSecret(ciphertext, oneTime);
-    console.log(ciphertext, iv, key);
+    if (error) return;
     setResult({ url: `${data}/${iv}`, cryptoKey: key });
   };
 
